@@ -1,11 +1,9 @@
 #!/bin/sh
 
-cd autoconf
-
-if ! test -e ./configure; then
-    echo ./configure not present in autoconf/: running aclocal and autoconf
-    aclocal
-    autoconf
+if ! test -e ./autoconf/configure; then
+    echo ./autoconf/configure not present: running ocp-autoconf
+    ocp-autoconf
 fi
 
+cd autoconf
 ./configure $*

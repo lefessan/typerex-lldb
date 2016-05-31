@@ -18,7 +18,7 @@
 (*  SOFTWARE.                                                             *)
 (**************************************************************************)
 
-version = lldb_version
+version = package_version
 
 begin library "ocplib-lldb"
     enabled = has_lldb
@@ -47,14 +47,14 @@ begin library "ocplib-lldb"
         sources = [ generator_byte ]
           commands = [
             { "bash" "-c"
-                %string( strings= [ generator_byte " " lldb_includes "/lldb/API/*.h" ]) }
+                %string( strings= [ generator_byte " " llvm_include "/lldb/API/*.h" ]) }
           ]
       )
      stubs_lib (
          build_target = true
          sources = [ generated_h stubs_cpp ]
          commands = [
-           { cxx "-g" "-c" "-std=c++11" "-I" ocamllib "-I" lldb_includes "-o" stubs_o stubs_cpp }
+           { cxx "-g" "-c" "-std=c++11" "-I" ocamllib "-I" llvm_include "-o" stubs_o stubs_cpp }
            { "ar" "rc" stubs_lib stubs_o }
          ]
       )

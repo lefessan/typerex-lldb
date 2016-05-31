@@ -1,0 +1,78 @@
+AC_PROG_CXX
+
+HAS_LLDB=false
+
+for file in \
+  "/usr/lib/llvm-${LLVM_VERSION}/include/lldb/API/SBDebugger.h" \
+  "/usr/lib/llvm-${LLVM_VERSION}/lib/liblldb.so.1" \
+  "/usr/lib/llvm-3.5/include/lldb/API/SBDebugger.h" \
+  "/usr/lib/llvm-3.5/lib/liblldb.so.1" \
+  "/usr/lib/llvm-3.6/include/lldb/API/SBDebugger.h" \
+  "/usr/lib/llvm-3.6/lib/liblldb.so.1" \
+  "/usr/lib/llvm-3.7/include/lldb/API/SBDebugger.h" \
+  "/usr/lib/llvm-3.7/lib/liblldb.so.1" \
+  "/usr/lib/llvm-3.8/include/lldb/API/SBDebugger.h" \
+  "/usr/lib/llvm-3.8/lib/liblldb.so.1" \
+  ; do
+  echo -n Testing $file...
+  (test -f $file && echo OK) || echo not found
+done
+
+if { test -f "/usr/lib/llvm-${LLVM_VERSION}/include/lldb/API/SBDebugger.h"; } &&
+   { test -f "/usr/lib/llvm-${LLVM_VERSION}/lib/liblldb.so.1"; }; then {
+  echo lldb-${LLVM_VERSION} found
+  LLVM_INCLUDE=/usr/lib/llvm-${LLVM_VERSION}/include;
+  LIB_LLDB=/usr/lib/llvm-${LLVM_VERSION}/lib/liblldb.so.1;
+  HAS_LLDB=true;
+  };
+else
+echo lldb-\$LLVM_VERSION not detected
+
+if { test -f "/usr/lib/llvm-3.5/include/lldb/API/SBDebugger.h"; } &&
+   { test -f "/usr/lib/llvm-3.5/lib/liblldb.so.1"; }; then {
+  echo lldb-3.5 found
+  LLVM_INCLUDE=/usr/lib/llvm-3.5/include;
+  LIB_LLDB=/usr/lib/llvm-3.5/lib/liblldb.so.1;
+  HAS_LLDB=true;
+  };
+else
+
+echo lldb-3.5 not detected
+if { test -f "/usr/lib/llvm-3.6/include/lldb/API/SBDebugger.h"; } &&
+   { test -f "/usr/lib/llvm-3.6/lib/liblldb.so.1"; }; then {
+  echo lldb-3.6 found
+  LLVM_INCLUDE=/usr/lib/llvm-3.6/include;
+  LIB_LLDB=/usr/lib/llvm-3.6/lib/liblldb.so.1;
+  HAS_LLDB=true;
+  };
+else
+  echo lldb-3.6 not detected
+fi
+
+fi
+fi
+
+# Maybe on XCode:
+# /Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/Python/lldb/_lldb.so
+
+# Modify directly these lines with the locations for
+# LLDB include files (in this directory, you should
+# find lldb/API/SBDebugger.h)
+# We cache a copy of lattest LLDB developments:
+#LLVM_INCLUDE:=$(ROOTDIR)/lldb-linux-amd64-bins/2015-03-06+Debug+Asserts/include
+#LLVM_INCLUDE:=$(HOME)/GIT/llvm.org/llvm/tools/lldb/include/
+
+# -llldb won't work if there is no .so file (only .so.1 on my Debian)
+# We cache a copy of lattest LLDB developments:
+#LIB_LLDB:=$(ROOTDIR)/lldb-linux-amd64-bins/2015-03-06+Debug+Asserts/liblldb.so
+#LIB_LLDB:=/home/lefessan/GIT/llvm.org/llvm/Debug+Asserts/lib/liblldb.so
+
+if test "x$HAS_LLDB" = "xtrue"; then
+
+  echo ocp-lldb will be installed in ${bindir}
+
+else
+
+  echo Missing dep. ocp-lldb will not be compiled.
+  exit 2
+fi

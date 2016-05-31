@@ -30,12 +30,18 @@ begin rules "lldb-conf"
         commands = [ { "./configure" } ]
       )
     ]
-end
+end;
 
-if include "autoconf/config.ocpgen" then {} else {
+if include "autoconf/config.ocpgen" then {
+  has_lldb = conf_has_lldb;
+  ocamllib = conf_ocamllib;
+  cxx = conf_cxx;
+  lib_lldb = conf_lib_lldb;
+  llvm_include = conf_llvm_include;
+} else {
     has_lldb = true
     ocamllib = ""
     cxx = ""
     lib_lldb = ""
-    lldb_includes = ""
+    llvm_include = "";
 }
